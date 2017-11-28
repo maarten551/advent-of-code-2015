@@ -1,0 +1,37 @@
+var content = document.getElementsByTagName("body")[0].getElementsByTagName("pre")[0].innerHTML;
+var lineBreakerRegex = new RegExp(/.*(?=\n)/g); //Lookahead to ignore the newline
+var dimensionBreakerRegex = new RegExp(/(\d{1,3})x(\d{1,3})x(\d{1,3})/);
+var dimensionsOfPresents = content.match(lineBreakerRegex);
+var totalAmountOfRibonLengthNeeded = 0;
+
+for(var presentDimensionsIndex in dimensionsOfPresents) {
+    var presentDimensions = dimensionsOfPresents[presentDimensionsIndex];
+    if(dimensionBreakerRegex.test(presentDimensions)) {
+        var dimensionBreakResult = presentDimensions.match(dimensionBreakerRegex);
+        var dimensions = { //length l, width w, and height h
+            "l" : dimensionBreakResult[1],
+            "w"  : dimensionBreakResult[2],
+            "h" : dimensionBreakResult[3]
+        }
+        
+        totalAmountOfRibonLengthNeeded += (dimensions.l * dimensions.w * dimensions.h);
+        totalAmountOfRibonLengthNeeded += getSmallestFaceArea([dimensions.l, dimensions.w, dimensions.h]);
+    }
+}
+
+function getSmallestFaceArea(dimensionObject) {
+    var keys = Object.keys(dimensionObject);
+    var smallestOutline = undefined;
+    
+    for(var firstDimensionKey = 0; firstDimensionKey < keys.length; firstDimensionKey++) {
+        for(var secondDimensionKey = firstDimensionKey+1; secondDimensionKey < keys.length; secondDimensionKey++) {
+            var outline = (dimensionObject[firstDimensionKey]*2)+(dimensionObject[secondDimensionKey]*2);
+            if(smallestOutline === undefined || smallestOutline > outline)
+                smallestOutline = outline;
+        }
+    }
+    
+    return smallestOutline;
+}
+
+console.log(totalAmountOfRibonLengthNeeded);

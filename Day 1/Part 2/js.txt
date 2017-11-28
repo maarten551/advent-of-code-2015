@@ -1,0 +1,14 @@
+var content = document.getElementsByTagName("body")[0].innerHTML;
+var amountOfStairsUp = 0;
+var amountOfStairsDown = 0;
+
+for(var i = 0; i < content.length; i++) {
+    if(content.charAt(i) == "(") amountOfStairsUp++;
+    if(content.charAt(i) == ")") amountOfStairsDown++;
+    if((amountOfStairsUp - amountOfStairsDown) < 0) {
+        console.info(i-4); //Remove <pre> from the count
+        break;
+    }
+}
+
+console.log(amountOfStairsUp - amountOfStairsDown);
